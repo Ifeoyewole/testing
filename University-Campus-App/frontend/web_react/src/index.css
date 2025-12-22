@@ -1,0 +1,42 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Global background wrapper that paints the school logo across the app */
+.app-bg {
+  position: relative;
+  min-height: 100vh;
+}
+
+.app-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Provided via inline CSS var from React: --app-bg-image: url('/path') */
+  background-image: var(--app-bg-image);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12; /* adjust for visibility */
+  z-index: -1;
+}
+
