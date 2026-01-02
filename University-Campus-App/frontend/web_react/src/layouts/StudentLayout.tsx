@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiHome, FiCheckSquare, FiCalendar, FiBook, FiBell, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiHome, FiCheckSquare, FiCalendar, FiBook, FiBell, FiUser, FiLogOut, FiVideo } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 
 type StudentLayoutProps = {
@@ -18,6 +18,7 @@ function StudentLayout({ children }: StudentLayoutProps) {
 
   const studentMenuItems = [
     { name: 'Dashboard', icon: FiHome, path: '/dashboard' },
+    { name: 'Live Classes', icon: FiVideo, path: '/live-classes' },
     { name: 'Attendance', icon: FiCheckSquare, path: '/attendance' },
     { name: 'Timetable', icon: FiCalendar, path: '/timetable' },
     { name: 'Courses', icon: FiBook, path: '/events' },
