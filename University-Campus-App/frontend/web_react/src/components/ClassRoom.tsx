@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   LiveKitRoom,
   VideoConference,
@@ -6,9 +6,8 @@ import {
   ParticipantTile,
   RoomAudioRenderer,
   ControlBar,
-  useTracks,
 } from '@livekit/components-react';
-import { Track, Room } from 'livekit-client';
+import { Room } from 'livekit-client';
 import '@livekit/components-styles';
 import { FiMic, FiMicOff, FiVideo, FiVideoOff } from 'react-icons/fi';
 import { PiHandFist } from 'react-icons/pi';
@@ -18,9 +17,15 @@ type ClassRoomProps = {
   userName: string;
   token: string;
   serverUrl: string;
+  initialCanSpeak?: boolean;
 };
 
-function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
+type Notice = {
+  type: 'info' | 'success' | 'error';
+  text: string;
+};
+
+function ClassRoom({ roomName, userName, token, serverUrl, initialCanSpeak = false }: ClassRoomProps) {
   const [room] = useState(
     () =>
       new Room({
@@ -36,9 +41,25 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
       })
   );
   const [handRaised, setHandRaised] = useState(false);
-  const [canSpeak, setCanSpeak] = useState(false);
+  const [canSpeak, setCanSpeak] = useState(initialCanSpeak);
   const [isMuted, setIsMuted] = useState(true);
   const [isVideoOff, setIsVideoOff] = useState(true);
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const noticeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const showNotice = (text: string, type: Notice['type'] = 'info', durationMs = 4000) => {
+    if (noticeTimeout.current) {
+      clearTimeout(noticeTimeout.current);
+    }
+    setNotice({ type, text });
+    noticeTimeout.current = setTimeout(() => setNotice(null), durationMs);
+  };
+
+  useEffect(() => () => {
+    if (noticeTimeout.current) {
+      clearTimeout(noticeTimeout.current);
+    }
+  }, []);
 
   useEffect(() => {
     // Listen for permissions from teacher
@@ -52,6 +73,10 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
           // Mute if permission revoked
           setIsMuted(true);
         }
+        showNotice(
+          message.allowed ? 'Teacher granted you permission to speak' : 'Permission to speak was revoked',
+          message.allowed ? 'success' : 'info'
+        );
       }
     };
 
@@ -79,11 +104,12 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
     );
 
     await room.localParticipant.publishData(data, { reliable: true });
+    showNotice(newState ? 'Hand raised. Waiting for teacher approval' : 'Hand lowered', 'info');
   };
 
   const handleToggleMic = async () => {
     if (!canSpeak) {
-      alert('You need permission from the teacher to speak');
+      showNotice('You need permission from the teacher to speak', 'error');
       return;
     }
 
@@ -92,6 +118,7 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
 
     if (room.localParticipant) {
       await room.localParticipant.setMicrophoneEnabled(!newState);
+      showNotice(!newState ? 'Microphone unmuted' : 'Microphone muted', !newState ? 'success' : 'info');
     }
   };
 
@@ -101,6 +128,7 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
 
     if (room.localParticipant) {
       await room.localParticipant.setCameraEnabled(!newState);
+      showNotice(!newState ? 'Camera turned on' : 'Camera turned off', !newState ? 'success' : 'info');
     }
   };
 
@@ -126,6 +154,7 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
             <button
               onClick={handleToggleMic}
               disabled={!canSpeak}
+              aria-label={canSpeak ? 'toggle microphone' : 'microphone permission required'}
               className={`p-4 rounded-full transition ${
                 canSpeak
                   ? isMuted
@@ -140,6 +169,7 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
 
             <button
               onClick={handleToggleVideo}
+              aria-label="toggle camera"
               className={`p-4 rounded-full transition ${
                 isVideoOff
                   ? 'bg-red-500 hover:bg-red-600'
@@ -152,6 +182,7 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
 
             <button
               onClick={handleRaiseHand}
+              aria-label="raise hand"
               className={`p-4 rounded-full transition ${
                 handRaised
                   ? 'bg-yellow-500 hover:bg-yellow-600 animate-pulse'
@@ -178,6 +209,21 @@ function ClassRoom({ roomName, userName, token, serverUrl }: ClassRoomProps) {
               <p className="text-sm text-yellow-400">
                 ✋ Hand raised - waiting for teacher
               </p>
+            )}
+            {notice && (
+              <div
+                className={`mt-3 px-4 py-2 inline-block rounded-md text-sm ${
+                  notice.type === 'success'
+                    ? 'bg-green-500/20 text-green-200 border border-green-500/40'
+                    : notice.type === 'error'
+                    ? 'bg-red-500/20 text-red-200 border border-red-500/40'
+                    : 'bg-blue-500/10 text-blue-100 border border-blue-500/30'
+                }`}
+                role="status"
+                aria-live="polite"
+              >
+                {notice.text}
+              </div>
             )}
           </div>
         </div>

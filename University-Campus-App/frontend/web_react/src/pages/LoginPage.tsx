@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiUser, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { APP_NAME } from '../config/appConfig';
@@ -15,6 +15,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, signup } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,13 +32,11 @@ function LoginPage() {
       }
 
       if (result.success) {
-        if (userType === 'admin') {
-          navigate('/admin');
-        } else if (userType === 'teacher') {
-          navigate('/teacher');
-        } else {
-          navigate('/dashboard');
-        }
+        const fromLocation = (location.state as { from?: string } | null)?.from;
+        const fallbackPath =
+          userType === 'admin' ? '/admin' : userType === 'teacher' ? '/teacher' : '/dashboard';
+
+        navigate(fromLocation || fallbackPath, { replace: true });
       } else {
         setError(result.error);
       }
