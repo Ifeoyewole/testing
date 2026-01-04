@@ -134,6 +134,7 @@ function ClassRoom({ roomName, userName, token, serverUrl, initialCanSpeak = fal
 
   return (
     <div className="h-full flex flex-col bg-gray-900">
+      {/* @ts-expect-error LiveKitRoom return type is ReactNode but used as JSX */}
       <LiveKitRoom
         video={false}
         audio={false}

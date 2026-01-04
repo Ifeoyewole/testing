@@ -1,7 +1,8 @@
+/// <reference types="@testing-library/jest-dom" />
+/// <reference types="jest" />
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import '@testing-library/jest-dom';
 import ClassRoom from './ClassRoom';
 
 jest.useFakeTimers();
@@ -73,7 +74,7 @@ describe('ClassRoom', () => {
       fireEvent.click(micButton);
     });
 
-    expect(screen.getByText(/permission from the teacher/i)).toBeInTheDocument();
+    expect(screen.getByText(/permission from the teacher/i)).toBeTruthy();
   });
 
   it('enables microphone after teacher permission is granted', () => {
@@ -94,6 +95,6 @@ describe('ClassRoom', () => {
     });
 
     expect(room.localParticipant.setMicrophoneEnabled).toHaveBeenCalledWith(true);
-    expect(screen.getByText(/granted you permission/i)).toBeInTheDocument();
+    expect(screen.getByText(/granted you permission/i)).toBeTruthy();
   });
 });
