@@ -10,6 +10,8 @@ export type User = {
   avatar: string;
   department?: string;
   joinDate?: string;
+  studentId?: string;
+  staffId?: string;
 };
 
 type AuthResult = { success: true; user: User } | { success: false; error: string };

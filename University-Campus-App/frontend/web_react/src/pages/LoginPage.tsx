@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiUser, FiArrowRight } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
+import { FiMail, FiLock, FiUser, FiArrowRight, FiHash } from 'react-icons/fi';
+import { useAuth, User } from '../context/AuthContext';
 import { APP_NAME } from '../config/appConfig';
 
 type UserRole = 'student' | 'teacher' | 'admin';
@@ -12,16 +12,29 @@ function LoginPage() {
   const [userType, setUserType] = useState<UserRole>('student');
   const [isSignup, setIsSignup] = useState(false);
   const [fullName, setFullName] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [teacherId, setTeacherId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, signup } = useAuth();
+  const { login, signup, updateProfile } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (userType === 'student' && !studentId.trim()) {
+      setError('Please enter your Matric / Student ID');
+      setLoading(false);
+      return;
+    }
+    if (userType === 'teacher' && !teacherId.trim()) {
+      setError('Please enter your Staff ID / Passcode');
+      setLoading(false);
+      return;
+    }
 
     try {
       let result;
@@ -35,6 +48,13 @@ function LoginPage() {
         const fromLocation = (location.state as { from?: string } | null)?.from;
         const fallbackPath =
           userType === 'admin' ? '/admin' : userType === 'teacher' ? '/teacher' : '/dashboard';
+
+        if (userType === 'student' && studentId) {
+          updateProfile({ studentId } as Partial<User>);
+        }
+        if (userType === 'teacher' && teacherId) {
+          updateProfile({ staffId: teacherId } as Partial<User>);
+        }
 
         navigate(fromLocation || fallbackPath, { replace: true });
       } else {
@@ -73,8 +93,8 @@ function LoginPage() {
                     onClick={() => setUserType(type)}
                     className={`py-2 px-4 rounded-lg font-semibold transition capitalize ${
                       userType === type
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg'
-                        : 'bg-white/10 text-gray-300 hover:bg-white/20 border border-white/20'
+                        ? 'bg-gradient-to-r from-[#5a381e] to-[#8c5c32] text-white shadow-lg'
+                        : 'bg-white/5 text-gray-200 hover:bg-white/15 border border-white/15'
                     }`}
                   >
                     {type}
@@ -93,8 +113,40 @@ function LoginPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#8c5c32] focus:ring-2 focus:ring-[#8c5c32]/60 transition"
                     required={isSignup}
+                  />
+                </div>
+              </div>
+            )}
+
+            {userType === 'student' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">Matric / Student ID</label>
+                <div className="relative">
+                  <FiHash className="absolute left-3 top-3 text-gray-400" size={20} />
+                  <input
+                    type="text"
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
+                    placeholder="LAU/CSC/2023/001"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#8c5c32] focus:ring-2 focus:ring-[#8c5c32]/60 transition"
+                  />
+                </div>
+              </div>
+            )}
+
+            {userType === 'teacher' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2">Staff ID / Passcode</label>
+                <div className="relative">
+                  <FiHash className="absolute left-3 top-3 text-gray-400" size={20} />
+                  <input
+                    type="text"
+                    value={teacherId}
+                    onChange={(e) => setTeacherId(e.target.value)}
+                    placeholder="LAU-STAFF-204"
+                    className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#8c5c32] focus:ring-2 focus:ring-[#8c5c32]/60 transition"
                   />
                 </div>
               </div>
@@ -109,7 +161,7 @@ function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@university.edu"
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition"
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#8c5c32] focus:ring-2 focus:ring-[#8c5c32]/60 transition"
                   required
                 />
               </div>
@@ -124,7 +176,7 @@ function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition"
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#8c5c32] focus:ring-2 focus:ring-[#8c5c32]/60 transition"
                   required
                 />
               </div>
@@ -133,7 +185,7 @@ function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-6"
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-[#5a381e] to-[#8c5c32] text-white font-semibold hover:opacity-95 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-6 shadow-lg"
             >
               {loading ? (
                 <>
@@ -150,9 +202,12 @@ function LoginPage() {
 
             {!isSignup && (
               <div className="text-center">
-                <a href="#" className="text-sm text-blue-400 hover:text-blue-300 transition">
+                <button
+                  type="button"
+                  className="text-sm text-[#f5c542] hover:text-[#ffd76a] transition"
+                >
                   Forgot password?
-                </a>
+                </button>
               </div>
             )}
           </form>
@@ -168,8 +223,10 @@ function LoginPage() {
                 setFullName('');
                 setEmail('');
                 setPassword('');
+                setStudentId('');
+                setTeacherId('');
               }}
-              className="text-blue-400 hover:text-blue-300 font-semibold transition"
+              className="text-[#f5c542] hover:text-[#ffd76a] font-semibold transition"
             >
               {isSignup ? 'Sign In' : 'Sign Up'}
             </button>
