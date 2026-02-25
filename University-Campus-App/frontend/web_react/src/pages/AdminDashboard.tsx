@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiBarChart2, FiUsers, FiCheckSquare, FiSettings, FiCalendar, FiLogOut } from "react-icons/fi";
+import { FiBarChart2, FiUsers, FiCheckSquare, FiSettings, FiCalendar } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,26 +37,8 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen text-white">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/10 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Admin Dashboard
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-300">{user?.email}</span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition"
-            >
-              <FiLogOut size={18} />
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="text-white">
+      <div className="max-w-7xl mx-auto py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -86,11 +68,10 @@ function AdminDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 font-semibold transition border-b-2 whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 font-semibold transition border-b-2 whitespace-nowrap ${activeTab === tab.id
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+                  }`}
               >
                 <Icon size={20} />
                 {tab.label}
@@ -168,11 +149,10 @@ function AdminDashboard() {
                         <td className="py-3 px-4 text-gray-400">{row.email}</td>
                         <td className="py-3 px-4">{row.role}</td>
                         <td className="py-3 px-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            row.status === 'Active'
-                              ? 'bg-green-500/20 text-green-400'
-                              : 'bg-gray-500/20 text-gray-400'
-                          }`}>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${row.status === 'Active'
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-gray-500/20 text-gray-400'
+                            }`}>
                             {row.status}
                           </span>
                         </td>

@@ -46,6 +46,10 @@ function DashboardPage() {
     },
   ];
 
+  const totalAttended = attendanceData.reduce((sum, s) => sum + s.attended, 0);
+  const totalClasses = attendanceData.reduce((sum, s) => sum + s.total, 0);
+  const attendanceRate = totalClasses > 0 ? Math.round((totalAttended / totalClasses) * 100) : 0;
+
   return (
     <div className="p-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-8">Welcome Back!</h1>
@@ -53,20 +57,22 @@ function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
           <h3 className="text-gray-100 text-sm font-semibold mb-2">Attendance Rate</h3>
-          <p className="text-4xl font-bold">84%</p>
-          <p className="text-blue-100 text-sm mt-2">Excellent performance</p>
+          <p className="text-4xl font-bold">{attendanceRate}%</p>
+          <p className="text-blue-100 text-sm mt-2">
+            {attendanceRate >= 80 ? 'Excellent performance' : attendanceRate >= 60 ? 'Good, keep it up' : 'Needs improvement'}
+          </p>
         </div>
 
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
           <h3 className="text-gray-100 text-sm font-semibold mb-2">Current Courses</h3>
-          <p className="text-4xl font-bold">6</p>
+          <p className="text-4xl font-bold">{attendanceData.length}</p>
           <p className="text-green-100 text-sm mt-2">This semester</p>
         </div>
 
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
           <h3 className="text-gray-100 text-sm font-semibold mb-2">Upcoming Events</h3>
-          <p className="text-4xl font-bold">12</p>
-          <p className="text-purple-100 text-sm mt-2">This month</p>
+          <p className="text-4xl font-bold">{upcomingEvents.length}</p>
+          <p className="text-purple-100 text-sm mt-2">Coming up</p>
         </div>
       </div>
 

@@ -162,7 +162,7 @@ function LandingPage() {
       {/* Footer */}
       <footer className="px-6 py-8 border-t border-white/10">
         <div className="max-w-7xl mx-auto text-center text-gray-400 text-sm">
-          <p>&copy; 2025 {APP_NAME}. All rights reserved.</p>
+          <p>&copy; 2026 {APP_NAME}. All rights reserved.</p>
         </div>
       </footer>
 

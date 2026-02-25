@@ -4,7 +4,7 @@ import { FiMail, FiLock, FiUser, FiArrowRight, FiHash } from 'react-icons/fi';
 import { useAuth, User } from '../context/AuthContext';
 import { APP_NAME } from '../config/appConfig';
 
-type UserRole = 'student' | 'teacher' | 'admin';
+type UserRole = 'student' | 'teacher';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -46,8 +46,7 @@ function LoginPage() {
 
       if (result.success) {
         const fromLocation = (location.state as { from?: string } | null)?.from;
-        const fallbackPath =
-          userType === 'admin' ? '/admin' : userType === 'teacher' ? '/teacher' : '/dashboard';
+        const fallbackPath = userType === 'teacher' ? '/teacher' : '/dashboard';
 
         if (userType === 'student' && studentId) {
           updateProfile({ studentId } as Partial<User>);
@@ -85,17 +84,16 @@ function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-200 mb-3">I am a</label>
-              <div className="grid grid-cols-3 gap-3">
-                {(['student', 'teacher', 'admin'] as UserRole[]).map((type) => (
+              <div className="grid grid-cols-2 gap-3">
+                {(['student', 'teacher'] as UserRole[]).map((type) => (
                   <button
                     key={type}
                     type="button"
                     onClick={() => setUserType(type)}
-                    className={`py-2 px-4 rounded-lg font-semibold transition capitalize ${
-                      userType === type
-                        ? 'bg-gradient-to-r from-[#5a381e] to-[#8c5c32] text-white shadow-lg'
-                        : 'bg-white/5 text-gray-200 hover:bg-white/15 border border-white/15'
-                    }`}
+                    className={`py-2 px-4 rounded-lg font-semibold transition capitalize ${userType === type
+                      ? 'bg-gradient-to-r from-[#5a381e] to-[#8c5c32] text-white shadow-lg'
+                      : 'bg-white/5 text-gray-200 hover:bg-white/15 border border-white/15'
+                      }`}
                   >
                     {type}
                   </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiBook, FiUsers, FiCheckSquare, FiBarChart2, FiLogOut } from 'react-icons/fi';
+import { FiBook, FiUsers, FiCheckSquare, FiBarChart2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -37,26 +37,8 @@ function TeacherDashboard() {
   ];
 
   return (
-    <div className="min-h-screen text-white">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/10 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
-            Teacher Dashboard
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-300">{user?.email}</span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition"
-            >
-              <FiLogOut size={18} />
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="text-white">
+      <div className="max-w-7xl mx-auto py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -86,11 +68,10 @@ function TeacherDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 font-semibold transition border-b-2 whitespace-nowrap ${
-                  activeTab === tab.id
-                    ? 'border-green-500 text-green-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 font-semibold transition border-b-2 whitespace-nowrap ${activeTab === tab.id
+                  ? 'border-green-500 text-green-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+                  }`}
               >
                 <Icon size={20} />
                 {tab.label}
@@ -192,11 +173,10 @@ function TeacherDashboard() {
                         <td className="py-3 px-4">{student.name}</td>
                         <td className="py-3 px-4 text-gray-400">{student.id}</td>
                         <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                            parseFloat(student.attendance) >= 85
-                              ? 'bg-green-500/20 text-green-400'
-                              : 'bg-yellow-500/20 text-yellow-400'
-                          }`}>
+                          <span className={`px-2 py-1 rounded text-xs font-semibold ${parseFloat(student.attendance) >= 85
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-yellow-500/20 text-yellow-400'
+                            }`}>
                             {student.attendance}
                           </span>
                         </td>

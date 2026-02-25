@@ -11,8 +11,10 @@ import AttendancePage from './pages/AttendancePage';
 import TimetablePage from './pages/TimetablePage';
 import EventsPage from './pages/EventsPage';
 import NotificationsPage from './pages/NotificationsPage';
+import LiveClassPage from './pages/LiveClassPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLoginPage from './pages/AdminLoginPage';
 import TeacherDashboard from './pages/TeacherDashboard';
 
 // Layouts
@@ -65,6 +67,7 @@ function AppContent() {
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin/login" element={<AdminLoginPage />} />
 
       {/* Protected Student Routes */}
       <Route
@@ -93,6 +96,16 @@ function AppContent() {
           <ProtectedRoute requiredRole="student">
             <StudentLayout>
               <TimetablePage />
+            </StudentLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/live-classes"
+        element={
+          <ProtectedRoute requiredRole="student">
+            <StudentLayout>
+              <LiveClassPage />
             </StudentLayout>
           </ProtectedRoute>
         }

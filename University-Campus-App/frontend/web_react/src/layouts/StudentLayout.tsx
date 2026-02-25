@@ -21,7 +21,7 @@ function StudentLayout({ children }: StudentLayoutProps) {
     { name: 'Live Classes', icon: FiVideo, path: '/live-classes' },
     { name: 'Attendance', icon: FiCheckSquare, path: '/attendance' },
     { name: 'Timetable', icon: FiCalendar, path: '/timetable' },
-    { name: 'Courses', icon: FiBook, path: '/events' },
+    { name: 'Events', icon: FiBook, path: '/events' },
     { name: 'Notifications', icon: FiBell, path: '/notifications' },
     { name: 'Profile', icon: FiUser, path: '/profile' },
   ];

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@livekit/components-react": "^2.9.17",
+    "@livekit/components-styles": "^1.2.0",
     "axios": "^1.3.2",
     "livekit-client": "^2.16.1",
     "react": "^18.2.0",
